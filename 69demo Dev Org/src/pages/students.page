@@ -1,0 +1,7 @@
+<apex:page standardController="Student__c" >
+  <h1>Hello {!$User.FirstName}</h1>
+  <br />
+  <h2>Welcome to your Custom Visualforce page!</h2>
+  <br />
+  <apex:enhancedList type="Student__c" height="500" rowsPerPage="25" />
+ </apex:page>

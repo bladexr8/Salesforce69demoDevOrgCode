@@ -1,0 +1,22 @@
+<apex:page controller="OrderLineItemController" >
+	<apex:form >
+		<apex:pageBlock title="Existing Order Line Items">
+			<apex:pageBlockTable value="{!ExistingItems}" var="oneItem" 
+				rendered="{!ExistingItems.size > 0}">
+				<apex:column value="{!oneItem.Item_Name__c}" />
+				<apex:column value="{!oneItem.Unit_Price__c}" />
+			</apex:pageBlockTable>
+			<apex:outputText value="No records to display" rendered="{!ExistingItems.size == 0}"></apex:outputText>
+		</apex:pageBlock>
+		<apex:pageBlock title="New Order Line Item">
+			<apex:pageMessages ></apex:pageMessages>
+			<apex:pageBlockSection >
+				<apex:inputField value="{!NewItem.Item_Name__c}" />
+				<apex:inputField value="{!NewItem.Unit_Price__c}" />
+			</apex:pageBlockSection>
+			<apex:pageBlockButtons >
+				<apex:commandButton action="{!insertNewItem}" value="Save" />
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

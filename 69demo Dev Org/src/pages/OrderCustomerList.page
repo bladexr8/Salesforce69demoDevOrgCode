@@ -1,0 +1,21 @@
+<apex:page standardController="Customer__c" recordSetVar="customers" >
+	<apex:form id="theForm">
+		<apex:pageBlock title="Viewing Customers">
+			<apex:pageBlockSection >
+				<apex:selectList value="{!filterid}" size="1">
+					<apex:selectOptions value="{!listviewoptions}" />
+					<apex:actionSupport event="onchange" rerender="list" />
+				</apex:selectList>
+			</apex:pageBlockSection>
+			<apex:pageBlockSection id="list">
+				<apex:dataList var="customer" value="{!customers}" type="1">
+					{!customer.name}
+				</apex:dataList>
+			</apex:pageBlockSection>
+			<apex:panelGrid columns="2">
+				<apex:commandLink action="{!previous}" rerender="list">Previous</apex:commandLink>
+				<apex:commandLink action="{!next}" rerender="list">Next</apex:commandLink>
+			</apex:panelGrid>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>
