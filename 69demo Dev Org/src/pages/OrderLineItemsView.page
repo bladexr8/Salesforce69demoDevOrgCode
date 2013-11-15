@@ -1,8 +1,11 @@
 <apex:page controller="OrderViewExtension" tabStyle="Order__c" >
 	<apex:form >
 		<apex:pageMessages ></apex:pageMessages>
-		<apex:pageBlock title="Maintain Order" >
-			<apex:pageBlockSection title="Order Header">
+		<apex:actionFunction name="editOrderLine" rerender="OrderInformation">
+			<apex:param name="editOrderLineId" value="" assignTo="{!editOrderLineId}" />
+		</apex:actionFunction>
+		<apex:pageBlock title="Maintain Order" id="OrderInformation" >
+			<apex:pageBlockSection title="Order Header" id="OrderHeader">
 				<apex:outputField value="{!CurrentOrder.Name}" />
 				<apex:outputField value="{!CurrentOrder.Customer__c}" />
 				<apex:outputField value="{!CurrentOrder.Planned_Delivery_Date__c}" />
@@ -10,26 +13,61 @@
 				<apex:outputLabel value="" />
 				<apex:outputField value="{!CurrentOrder.Discount__c}" />
 				<apex:outputField value="{!CurrentOrder.Comments__c}" />
-				<apex:outputField value="{!CurrentOrder.Grand_Total__c}" />				
+				<apex:outputField value="{!CurrentOrder.Grand_Total__c}" />	
+				<!-- <apex:outputLabel value="editOrderLineId" />
+				<apex:outputLabel value="{!editOrderLineId}" /> -->			
 			</apex:pageBlockSection>
-			<apex:pageBlockSection title="Order Lines" columns="1">
-				<apex:pageBlockTable id="OrderLinesTable" value="{!OrderLines}" var="line">
-					<apex:column value="{!line.Name}" />
+			<apex:pageBlockSection title="Order Lines" columns="1" id="OrderLines">
+				<apex:pageBlockTable value="{!OrderLines}" var="line" style="width:90%">
+					<!--  <apex:column value="{!line.id}" /> -->
+					<apex:column value="{!line.Name}" style="width:10%" />
 					<apex:column headerValue="Item">
 						<apex:outputLink value="/{!line.Order_Line_Item__c}"
 								target="_blank">{!line.Order_Line_Item__r.Item_Name__c}
 						</apex:outputLink>
 					</apex:column>
-					<apex:column value="{!line.Line_Item_Price__c}" />
-					<apex:column value="{!line.Quantity__c}" />
-					<apex:column value="{!line.Line_Item_Total__c}" />
+					
+					<apex:column value="{!line.Line_Item_Price__c}" style="text-align:center;width:10%" />
+					
+					<!-- make Quantity editable if it is clicked on -->
+					<apex:column headerValue="Quantity" style="text-align:center;width:5%"
+									value="{!line.Quantity__c}"
+									onclick="editOrderLine('{!line.id}')"
+									rendered="{!line.id != editOrderLineId}" />
+					<apex:column rendered="{!line.id == editOrderLineId}"
+								 headerValue="Quantity" style="text-align:center;width:5%" >
+						<apex:inputField value="{!line.Quantity__c}" style="text-align:center;width:80%" />
+					</apex:column>
+					
+					<apex:column value="{!line.Line_Item_Total__c}" style="text-align:center;width:10%" />
+					
+					<!--  Column for Action Buttons -->
+					<apex:column style="width:15%" headerValue="Actions" 
+						rendered="{!line.id != editOrderLineId}">
+						<apex:commandButton action="{!removeOrderLine}" 
+							rerender="OrderInformation" 
+							value="Delete" />
+					</apex:column>
+					<apex:column style="width:15%" headerValue="Actions" 
+						rendered="{!line.id == editOrderLineId}">
+						<apex:commandButton action="{!saveOrderLine}" 
+							rerender="OrderInformation" 
+							value="Save" />
+						<apex:commandButton action="{!cancelEditOrderLine}" 
+							rerender="OrderInformation" 
+							value="Cancel"
+							immediate="true" />
+					</apex:column>
+					
 				</apex:pageBlockTable>
 			</apex:pageBlockSection>
+		</apex:pageBlock>
+		<!-- <apex:pageBlock >
 			<apex:pageBlockSection title="Add New Order Line" columns="3">
 					<apex:inputField value="{!NewOrderLine.Order_Line_Item__c}" />
 					<apex:inputField value="{!NewOrderLine.Quantity__c}" />
 					<apex:commandButton action="{!insertOrderLine}" value="Create Order Line" />
-			</apex:pageBlockSection>
-		</apex:pageBlock>
+			</apex:pageBlockSection>		
+		</apex:pageBlock> -->
 	</apex:form>
 </apex:page>

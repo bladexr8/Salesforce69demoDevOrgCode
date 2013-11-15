@@ -12,6 +12,9 @@ public with sharing class OrderViewExtension {
 	// public property for inserting new Order Line record
 	public Order_Line__c NewOrderLine {get; set;}
 	
+	// public property for the Order Line being edited
+	public Id editOrderLineId {get; set;}
+	
 	
 	// constructor
 	public OrderViewExtension()
@@ -21,6 +24,9 @@ public with sharing class OrderViewExtension {
 				
 		// initialize property in case we want to add a new order line
 		NewOrderLine = new Order_Line__c();
+		
+		// initialize editOrderLineId to null
+		editOrderLineId = null;
 		
 		// get the Order Lines
 		prepareFullOrder();
@@ -41,7 +47,7 @@ public with sharing class OrderViewExtension {
 		
 				// Get the Order Lines for the Order
 				OrderLines = new List<Order_Line__c>();
-				OrderLines = [Select Id, Name, Order_Line_Item__c, 
+				OrderLines = [Select Name, Order_Line_Item__c, 
 								Line_Item_Price__c, Line_Item_Total__c, 
 								Order_Line_Item__r.Item_Name__c,
 								Order__c, Quantity__c
@@ -95,6 +101,17 @@ public with sharing class OrderViewExtension {
 		string methodName = 'saveOrderLines - ';
 		System.debug(TAG + methodName + 'Saving Order Lines...');
 		
+		update OrderLines;
+		prepareFullOrder();
+		
+		return cancelEditOrderLine();
+	}
+	
+	public PageReference cancelEditOrderLine()
+	{
+		string methodName = 'cancelEditOrderLine - ';
+		System.debug(TAG + methodName + 'Cancelling Edit of Order Line...');
+		editOrderLineId = null;
 		return null;
 	}
 
