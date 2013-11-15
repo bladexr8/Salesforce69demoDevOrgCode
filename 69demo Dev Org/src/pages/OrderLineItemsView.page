@@ -1,38 +1,35 @@
-<apex:page standardController="Order__c" extensions="OrderViewExtension" >
+<apex:page controller="OrderViewExtension" tabStyle="Order__c" >
 	<apex:form >
 		<apex:pageMessages ></apex:pageMessages>
 		<apex:pageBlock title="Maintain Order" >
 			<apex:pageBlockSection title="Order Header">
-				<apex:outputField value="{!Order__c.Name}" />
-				<apex:outputField value="{!Order__c.Customer__c}" />
-				<apex:outputField value="{!Order__c.Planned_Delivery_Date__c}" />
-				<apex:outputField value="{!Order__c.Order_Lines_Total__c}" />
+				<apex:outputField value="{!CurrentOrder.Name}" />
+				<apex:outputField value="{!CurrentOrder.Customer__c}" />
+				<apex:outputField value="{!CurrentOrder.Planned_Delivery_Date__c}" />
+				<apex:outputField value="{!CurrentOrder.Order_Lines_Total__c}" />
 				<apex:outputLabel value="" />
-				<apex:outputField value="{!Order__c.Discount__c}" />
-				<apex:outputField value="{!Order__c.Comments__c}" />
-				<apex:outputField value="{!Order__c.Grand_Total__c}" />				
+				<apex:outputField value="{!CurrentOrder.Discount__c}" />
+				<apex:outputField value="{!CurrentOrder.Comments__c}" />
+				<apex:outputField value="{!CurrentOrder.Grand_Total__c}" />				
 			</apex:pageBlockSection>
 			<apex:pageBlockSection title="Order Lines" columns="1">
-				<apex:pageBlockTable id="OrderLinesTable" value="{!wrappers}" var="wrap">
-					<apex:column value="{!wrap.orderLine.Name}" />
+				<apex:pageBlockTable id="OrderLinesTable" value="{!OrderLines}" var="line">
+					<apex:column value="{!line.Name}" />
 					<apex:column headerValue="Item">
-						<apex:outputLink value="/{!wrap.orderLine.Order_Line_Item__c}"
-								target="_blank">{!wrap.orderLine.Order_Line_Item__r.Item_Name__c}
+						<apex:outputLink value="/{!line.Order_Line_Item__c}"
+								target="_blank">{!line.Order_Line_Item__r.Item_Name__c}
 						</apex:outputLink>
 					</apex:column>
-					<apex:column value="{!wrap.orderLine.Line_Item_Price__c}" />
-					<apex:column value="{!wrap.orderLine.Quantity__c}" />
-					<apex:column value="{!wrap.orderLine.Line_Item_Total__c}" />
+					<apex:column value="{!line.Line_Item_Price__c}" />
+					<apex:column value="{!line.Quantity__c}" />
+					<apex:column value="{!line.Line_Item_Total__c}" />
 				</apex:pageBlockTable>
 			</apex:pageBlockSection>
-			<apex:pageBlockSection columns="1">
-				<apex:commandButton value="Save Order Lines" />
-			</apex:pageBlockSection>
-			<!-- <apex:pageBlockSection title="Add New Order Line" columns="3">
+			<apex:pageBlockSection title="Add New Order Line" columns="3">
 					<apex:inputField value="{!NewOrderLine.Order_Line_Item__c}" />
 					<apex:inputField value="{!NewOrderLine.Quantity__c}" />
-					<apex:commandButton action="{!insertOrderLineItem}" value="Create Order Line" />
-			</apex:pageBlockSection> -->
+					<apex:commandButton action="{!insertOrderLine}" value="Create Order Line" />
+			</apex:pageBlockSection>
 		</apex:pageBlock>
 	</apex:form>
 </apex:page>
